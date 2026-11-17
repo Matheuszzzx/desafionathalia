@@ -1,0 +1,35 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ main, master ]
+
+jobs:
+  lint:
+    name: Verificar Sintaxe (Linter)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar código do repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Executar HTMLHint
+        run: npx --yes htmlhint index.html
+
+  build:
+    name: Build do Projeto
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar código do repositório
+        uses: actions/checkout@v4
+
+      - name: Gerar Build
+        run: |
+          mkdir -p dist
+          cp index.html dist/index.html
+          echo "Build concluído com sucesso!"
